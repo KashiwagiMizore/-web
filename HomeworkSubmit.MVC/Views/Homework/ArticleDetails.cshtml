@@ -1,0 +1,139 @@
+﻿@model HomeworkSubmit.DTO.HomeworkArticleDTO
+@*同理 此处做简化 用dto代替viewmodel*@
+@{
+    ViewBag.Title = "ArticleDetails";
+}
+
+<div>
+    <hr />
+    <dl class="dl-horizontal">
+        <dt>
+            标题
+        </dt>
+
+        <dd>
+            @Html.DisplayFor(model => model.Title)
+        </dd>
+
+        <dt>
+            内容
+        </dt>
+
+        <dd>
+            @Html.Raw(Model.Content)
+        </dd>
+
+        <dt>
+            创建时间
+        </dt>
+
+        <dd>
+            @Html.DisplayFor(model => model.CreateTime)
+        </dd>
+
+        <dt>
+            用户名
+        </dt>
+
+        <dd>
+            @Html.DisplayFor(model => model.LoginName)
+        </dd>
+        <dt>
+            第几次作业
+        </dt>
+
+        <dd>
+            @Html.DisplayFor(model => model.VersionName)
+        </dd>
+
+    </dl>
+</div>
+
+
+<p>
+    @Html.ActionLink("返回列表", "ArticleList")
+    @if (ViewBag.IsStudent == false)
+    {
+        <input type="text" name="txtComment" id="txtComment" value="" />
+        <button onclick="addComment()">添加评论</button>
+
+        <input type="number" name="Score" id="Score" value="" />
+        <button onclick="addScore()">添加评分</button>
+
+    }
+</p>
+
+<ul>
+    @foreach (var comment in ViewBag.Comments)
+    {
+        <li>
+            <span>@comment.Content</span>
+            <br />
+            <span>@comment.LoginName @comment.CreateTime</span>
+        </li>
+    }
+</ul>
+
+@if (ViewBag.IsStudent == false)
+{
+    <button onclick="deleteComment()">清空评论</button>
+    <br />
+    <span>@Model.Score</span>
+    <br />
+    <button onclick="deleteScore()">删除评分</button>
+}
+
+@section headers{
+    <script>
+        function addComment() {
+            $.ajax({
+                url: "/Homework/AddComment/",
+                type: "post",
+                data: {
+                    Id: '@Model.Id',//将Id传到ViewModel中
+                    Content: document.getElementById("txtComment").value
+                }
+            }).done(() => {
+                alert("评论成功");
+                location.reload();
+            });
+        }
+        function deleteComment() {
+            $.ajax({
+                url: "/Homework/DeleteComments/",
+                type: "post",
+                data: {
+                    Id: '@Model.Id',
+                }
+            }).done(() => {
+                alert("删除成功");
+                location.reload();
+            });
+        }
+        function addScore() {
+            $.ajax({
+                url: "/Homework/AddScore/",
+                type: "post",
+                data: {
+                    Id: '@Model.Id',
+                    Score: document.getElementById("Score").value
+                }
+            }).done(() => {
+                alert("添加成功");
+                location.reload();
+            });
+        }
+        function deleteScore() {
+            $.ajax({
+                url: "/Homework/DeleteScore/",
+                type: "post",
+                data: {
+                    Id: '@Model.Id',
+                }
+            }).done(() => {
+                alert("删除成功");
+                location.reload();
+            });
+        }
+    </script>
+}

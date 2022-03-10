@@ -1,0 +1,393 @@
+﻿@model IEnumerable<HomeworkSubmit.DTO.HomeworkArticleDTO>
+@*由于没有输入 数据只用显示不用做校验 简化代码 用dto代替viewmodel*@
+@{
+    ViewBag.Title = "ArticleList";
+    var timeSpan = DateTime.Now - ViewBag.DeadLine;//设置超时时间为30分钟
+    var timeDataMinutes = timeSpan.TotalMinutes;
+    var timeDataHours = timeSpan.TotalHours;
+    var timeDataDays = timeSpan.TotalDays;
+}
+<br />
+<br />
+<p>
+    @*@Html.ActionLink("发表作业", "AddArticle", new { id = ViewBag.VersionId, deadLine = ViewBag.DeadLine }) *@
+    @if (ViewBag.IsTeacher || ViewBag.IsStudent)
+    {
+        <a href="/Homework/AddArticle?id=@ViewBag.VersionId&deadLine=@ViewBag.DeadLine"
+           class="layui-btn layui-btn-radius layui-btn-normal">
+            <i class="layui-icon">&#xe608;</i>
+            发表作业
+        </a>@*点击后将versionid传过去*@
+    }
+</p>
+<br />
+<h4>该次作业的截止时间为 @ViewBag.DeadLine</h4>
+<br />
+<table class="table">
+    <tr>
+        <th width="132px">
+            发表的作业要求
+        </th>
+        <th width="232px">
+            创建时间
+        </th>
+        <th width="132px">
+            学号
+        </th>
+        <th width="132px">
+            姓名
+        </th>
+        <th width="132px">
+            班级
+        </th>
+        <th width="132px">
+            第几次作业
+        </th>
+        <th></th>
+    </tr>
+
+    @foreach (var item in Model)
+    {
+        if (item.ClassNum == ViewBag.classNum || ViewBag.classNum == 0)
+        {
+            if (item.IsTeacher)//检测该文章作者是否为老师 显示表单
+            {
+                <tr>
+                    <td>
+                        @Html.DisplayFor(modelItem => item.Title)
+                    </td>
+                    <td>
+                        @Html.DisplayFor(modelItem => item.CreateTime)
+                    </td>
+                    <td>
+                        @Html.DisplayFor(modelItem => item.LoginName)
+                    </td>
+                    <td>
+                        @Html.DisplayFor(modelItem => item.Name)
+                    </td>
+                    <td>
+                        @Html.DisplayFor(modelItem => item.ClassNum)
+                    </td>
+                    <td>
+                        @Html.DisplayFor(modelItem => item.VersionName)
+                    </td>
+                    <td>
+                        @if (ViewBag.IsTeacher)//目前登陆的用户为老师权限
+                        {
+                            if (ViewBag.NowLogin == item.LoginName)//目前登陆的用户和文章作者一致
+                            {
+                                <div class="layui-btn-group">
+                                    <a href="/Homework/EditArticle?id=@item.Id&loginName=@item.LoginName&deadLine=@ViewBag.DeadLine"
+                                       class="layui-btn layui-btn-primary layui-btn-sm">
+                                        <i class="layui-icon">&#xe642;</i>
+                                        编辑
+                                    </a>
+                                    <a href="/Homework/ArticleDetails?id=@item.Id&loginName=@item.LoginName
+                                       &deadLine=@ViewBag.DeadLine"
+                                       class="layui-btn layui-btn-primary layui-btn-sm">
+                                        <i class="layui-icon">&#xe702;</i>
+                                        查看
+                                    </a>
+                                    <a href="/Homework/DeleteArticle?id=@item.Id"
+                                       class="layui-btn layui-btn-primary layui-btn-sm">
+                                        <i class="layui-icon">&#xe640;</i>
+                                        删除
+                                    </a>
+                                </div>
+                            }
+                            if (ViewBag.NowLogin != item.LoginName)//目前用户和文章作者不一致
+                            {
+                                <div class="layui-btn-group">
+                                    <a href="/Homework/EditArticle?id=@item.Id&loginName=@item.LoginName&deadLine=@ViewBag.DeadLine"
+                                       class="layui-btn layui-btn-primary layui-btn-sm layui-btn-disabled">
+                                        <i class="layui-icon">&#xe642;</i>
+                                        编辑
+                                    </a>
+                                    <a href="/Homework/ArticleDetails?id=@item.Id&loginName=@item.LoginName
+                                       &deadLine=@ViewBag.DeadLine"
+                                       class="layui-btn layui-btn-primary layui-btn-sm">
+                                        <i class="layui-icon">&#xe702;</i>
+                                        查看
+                                    </a>
+                                    <a href="/Homework/DeleteArticle?id=@item.Id"
+                                       class="layui-btn layui-btn-primary layui-btn-sm">
+                                        <i class="layui-icon">&#xe640;</i>
+                                        删除
+                                    </a>
+                                </div>
+                            }
+                        }
+                        @if (ViewBag.IsStudent == true)//目前登陆的用户为学生权限
+                        {
+                            <div class="layui-btn-group">
+                                <a href="/Homework/EditArticle?id=@item.Id&loginName=@item.LoginName&deadLine=@ViewBag.DeadLine"
+                                   class="layui-btn layui-btn-primary layui-btn-sm layui-btn-disabled">
+                                    <i class="layui-icon">&#xe642;</i>
+                                    编辑
+                                </a>
+                                <a href="/Homework/ArticleDetails?id=@item.Id&loginName=@item.LoginName
+                                   &deadLine=@ViewBag.DeadLine"
+                                   class="layui-btn layui-btn-primary layui-btn-sm">
+                                    <i class="layui-icon">&#xe702;</i>
+                                    查看
+                                </a>
+                                <a href="/Homework/DeleteArticle?id=@item.Id"
+                                   class="layui-btn layui-btn-primary layui-btn-sm layui-btn-disabled">
+                                    <i class="layui-icon">&#xe640;</i>
+                                    删除
+                                </a>
+                            </div>
+                        }
+                        @if (ViewBag.IsAdmin == true)//目前登陆的用户为管理员权限
+                        {
+                            <div class="layui-btn-group">
+                                <a href="/Homework/EditArticle?id=@item.Id&loginName=@item.LoginName&deadLine=@ViewBag.DeadLine"
+                                   class="layui-btn layui-btn-primary layui-btn-sm layui-btn-disabled">
+                                    <i class="layui-icon">&#xe642;</i>
+                                    编辑
+                                </a>
+                                <a href="/Homework/ArticleDetails?id=@item.Id&loginName=@item.LoginName
+                                   &deadLine=@ViewBag.DeadLine"
+                                   class="layui-btn layui-btn-primary layui-btn-sm">
+                                    <i class="layui-icon">&#xe702;</i>
+                                    查看
+                                </a>
+                                <a href="/Homework/DeleteArticle?id=@item.Id"
+                                   class="layui-btn layui-btn-primary layui-btn-sm">
+                                    <i class="layui-icon">&#xe640;</i>
+                                    删除
+                                </a>
+                            </div>
+                        }
+                    </td>
+                </tr>
+            }
+        }
+
+
+    }
+
+</table>
+
+
+
+<table class="table">
+    <tr>
+        <th width="132px">
+            上传的作业标题
+        </th>
+        <th width="232px">
+            创建时间
+        </th>
+        <th width="132px">
+            学号
+        </th>
+        <th width="132px">
+            姓名
+        </th>
+        <th width="132px">
+            班级
+        </th>
+        <th width="132px">
+            第几次作业
+        </th>
+        <th></th>
+    </tr>
+
+    @foreach (var item in Model)
+    {
+        if (item.ClassNum == ViewBag.classNum || ViewBag.classNum == 0)
+        {
+            if (item.IsStudent == true)//检测该文章作者是否为学生 显示学生作业表单
+            {
+                <tr>
+                    <td>
+                        @Html.DisplayFor(modelItem => item.Title)
+                    </td>
+                    <td>
+                        @Html.DisplayFor(modelItem => item.CreateTime)
+                    </td>
+                    <td>
+                        @Html.DisplayFor(modelItem => item.LoginName)
+                    </td>
+                    <td>
+                        @Html.DisplayFor(modelItem => item.Name)
+                    </td>
+                    <td>
+                        @Html.DisplayFor(modelItem => item.ClassNum)
+                    </td>
+                    <td>
+                        @Html.DisplayFor(modelItem => item.VersionName)
+                    </td>
+                    <td>
+                        @if (ViewBag.IsTeacher)//目前登陆的用户为老师权限
+                        {
+                            if (ViewBag.NowLogin == item.LoginName)//目前登陆的用户和文章作者一致
+                            {
+                                <div class="layui-btn-group">
+                                    <a href="/Homework/EditArticle?id=@item.Id&loginName=@item.LoginName&deadLine=@ViewBag.DeadLine"
+                                       class="layui-btn layui-btn-primary layui-btn-sm">
+                                        <i class="layui-icon">&#xe642;</i>
+                                        编辑
+                                    </a>
+                                    <a href="/Homework/ArticleDetails?id=@item.Id&loginName=@item.LoginName
+                                       &deadLine=@ViewBag.DeadLine"
+                                       class="layui-btn layui-btn-primary layui-btn-sm">
+                                        <i class="layui-icon">&#xe702;</i>
+                                        查看
+                                    </a>
+                                    <a href="/Homework/DeleteArticle?id=@item.Id"
+                                       class="layui-btn layui-btn-primary layui-btn-sm">
+                                        <i class="layui-icon">&#xe640;</i>
+                                        删除
+                                    </a>
+                                </div>
+                            }
+                            if (ViewBag.NowLogin != item.LoginName)//目前用户和文章作者不一致
+                            {
+                                <div class="layui-btn-group">
+                                    <a href="/Homework/EditArticle?id=@item.Id&loginName=@item.LoginName&deadLine=@ViewBag.DeadLine"
+                                       class="layui-btn layui-btn-primary layui-btn-sm layui-btn-disabled">
+                                        <i class="layui-icon">&#xe642;</i>
+                                        编辑
+                                    </a>
+                                    <a href="/Homework/ArticleDetails?id=@item.Id&loginName=@item.LoginName
+                                       &deadLine=@ViewBag.DeadLine"
+                                       class="layui-btn layui-btn-primary layui-btn-sm">
+                                        <i class="layui-icon">&#xe702;</i>
+                                        查看
+                                    </a>
+                                    <a href="/Homework/DeleteArticle?id=@item.Id"
+                                       class="layui-btn layui-btn-primary layui-btn-sm">
+                                        <i class="layui-icon">&#xe640;</i>
+                                        删除
+                                    </a>
+                                </div>
+                            }
+                        }
+                        @if (ViewBag.IsStudent == true)//目前登陆的用户为学生权限
+                        {
+                            if (timeDataDays <= 0 && timeDataHours <= 0 && timeDataMinutes < 0)   //还未截止上传
+                            {
+                                if (ViewBag.NowLogin == item.LoginName)
+                                {
+                                    <div class="layui-btn-group">
+                                        <a href="/Homework/EditArticle?id=@item.Id&loginName=@item.LoginName&deadLine=@ViewBag.DeadLine"
+                                           class="layui-btn layui-btn-primary layui-btn-sm">
+                                            <i class="layui-icon">&#xe642;</i>
+                                            编辑
+                                        </a>
+                                        <a href="/Homework/ArticleDetails?id=@item.Id&loginName=@item.LoginName
+                                           &deadLine=@ViewBag.DeadLine"
+                                           class="layui-btn layui-btn-primary layui-btn-sm">
+                                            <i class="layui-icon">&#xe702;</i>
+                                            查看
+                                        </a>
+                                        <a href="/Homework/DeleteArticle?id=@item.Id"
+                                           class="layui-btn layui-btn-primary layui-btn-sm layui-btn-disabled">
+                                            <i class="layui-icon">&#xe640;</i>
+                                            删除
+                                        </a>
+                                    </div>
+                                }
+                                else//作者和登录用户不是同一人
+                                {
+                                    <div class="layui-btn-group">
+                                        <a href="/Homework/EditArticle?id=@item.Id&loginName=@item.LoginName&deadLine=@ViewBag.DeadLine"
+                                           class="layui-btn layui-btn-primary layui-btn-sm layui-btn-disabled">
+                                            <i class="layui-icon">&#xe642;</i>
+                                            编辑
+                                        </a>
+                                        <a href="/Homework/ArticleDetails?id=@item.Id&loginName=@item.LoginName
+                                           &deadLine=@ViewBag.DeadLine"
+                                           class="layui-btn layui-btn-primary layui-btn-sm layui-btn-disabled">
+                                            <i class="layui-icon">&#xe702;</i>
+                                            查看
+                                        </a>
+                                        <a href="/Homework/DeleteArticle?id=@item.Id"
+                                           class="layui-btn layui-btn-primary layui-btn-sm layui-btn-disabled">
+                                            <i class="layui-icon">&#xe640;</i>
+                                            删除
+                                        </a>
+                                    </div>
+                                }
+                            }
+                            else//截止上传
+                            {
+                                if (ViewBag.NowLogin == item.LoginName)
+                                {
+                                    <div class="layui-btn-group">
+                                        <a href="/Homework/EditArticle?id=@item.Id&loginName=@item.LoginName&deadLine=@ViewBag.DeadLine"
+                                           class="layui-btn layui-btn-primary layui-btn-sm layui-btn-disabled">
+                                            <i class="layui-icon">&#xe642;</i>
+                                            编辑
+                                        </a>
+                                        <a href="/Homework/ArticleDetails?id=@item.Id&loginName=@item.LoginName
+                                           &deadLine=@ViewBag.DeadLine"
+                                           class="layui-btn layui-btn-primary layui-btn-sm">
+                                            <i class="layui-icon">&#xe702;</i>
+                                            查看
+                                        </a>
+                                        <a href="/Homework/DeleteArticle?id=@item.Id"
+                                           class="layui-btn layui-btn-primary layui-btn-sm layui-btn-disabled">
+                                            <i class="layui-icon">&#xe640;</i>
+                                            删除
+                                        </a>
+                                    </div>
+                                }
+                                else
+                                {
+                                    <div class="layui-btn-group">
+                                        <a href="/Homework/EditArticle?id=@item.Id&loginName=@item.LoginName&deadLine=@ViewBag.DeadLine"
+                                           class="layui-btn layui-btn-primary layui-btn-sm layui-btn-disabled">
+                                            <i class="layui-icon">&#xe642;</i>
+                                            编辑
+                                        </a>
+                                        <a href="/Homework/ArticleDetails?id=@item.Id&loginName=@item.LoginName
+                                           &deadLine=@ViewBag.DeadLine"
+                                           class="layui-btn layui-btn-primary layui-btn-sm">
+                                            <i class="layui-icon">&#xe702;</i>
+                                            查看
+                                        </a>
+                                        <a href="/Homework/DeleteArticle?id=@item.Id"
+                                           class="layui-btn layui-btn-primary layui-btn-sm layui-btn-disabled">
+                                            <i class="layui-icon">&#xe640;</i>
+                                            删除
+                                        </a>
+                                    </div>
+                                }
+
+                            }
+                        }
+                        @if (ViewBag.IsAdmin == true)//目前登陆的用户为管理员权限
+                        {
+                            <div class="layui-btn-group">
+                                <a href="/Homework/EditArticle?id=@item.Id&loginName=@item.LoginName&deadLine=@ViewBag.DeadLine"
+                                   class="layui-btn layui-btn-primary layui-btn-sm layui-btn-disabled">
+                                    <i class="layui-icon">&#xe642;</i>
+                                    编辑
+                                </a>
+                                <a href="/Homework/ArticleDetails?id=@item.Id&loginName=@item.LoginName
+                                   &deadLine=@ViewBag.DeadLine"
+                                   class="layui-btn layui-btn-primary layui-btn-sm">
+                                    <i class="layui-icon">&#xe702;</i>
+                                    查看
+                                </a>
+                                <a href="/Homework/DeleteArticle?id=@item.Id"
+                                   class="layui-btn layui-btn-primary layui-btn-sm">
+                                    <i class="layui-icon">&#xe640;</i>
+                                    删除
+                                </a>
+                            </div>
+                        }
+                    </td>
+                </tr>
+            }
+        }
+    }
+
+</table>
+
+
+
+

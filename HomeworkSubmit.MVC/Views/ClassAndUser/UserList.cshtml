@@ -1,0 +1,74 @@
+﻿@model IEnumerable<HomeworkSubmit.DTO.UserInformationDTO>
+
+@{
+    ViewBag.Title = "UserList";
+}
+
+<h2>用户列表</h2>
+<a href="/ClassAndUser/AddTeacher?id=@ViewBag.ClassNumId"
+   class="layui-btn layui-btn-radius layui-btn-normal">
+    <i class="layui-icon">&#xe608;</i>
+    创建教师用户
+</a>
+<table class="table">
+    <tr>
+        <th>
+            @Html.DisplayNameFor(model => model.LoginName)
+        </th>
+        <th>
+            @Html.DisplayNameFor(model => model.Password)
+        </th>
+        <th>
+            @Html.DisplayNameFor(model => model.Name)
+        </th>
+        <th>
+            @Html.DisplayNameFor(model => model.ClassNum)
+        </th>
+        <th></th>
+    </tr>
+
+    @foreach (var item in Model)
+    {
+        <tr>
+            @if (item.IsAdmin == false)
+            {
+                <td>
+                    @Html.DisplayFor(modelItem => item.LoginName)
+                </td>
+                <td>
+                    @Html.DisplayFor(modelItem => item.Password)
+                </td>
+                <td>
+                    @Html.DisplayFor(modelItem => item.Name)
+                </td>
+                <td>
+                    @Html.DisplayFor(modelItem => item.ClassNum)
+                </td>
+                <td>
+                    @*@Html.ActionLink("编辑", "EditUser", new { loginName = item.LoginName }) |
+                        @Html.ActionLink("查看", "UserDetails", new { loginName = item.LoginName })|
+                        @Html.ActionLink("删除", "DeleteUser", new { id = item.Id })*@
+                    <div class="layui-btn-group">
+                        <a href="/ClassAndUser/EditUser?loginName=@item.LoginName"
+                           class="layui-btn layui-btn-primary layui-btn-sm ">
+                            <i class="layui-icon">&#xe642;</i>
+                            编辑
+                        </a>
+                        <a href="/ClassAndUser/UserDetails?loginName=@item.LoginName"
+                           class="layui-btn layui-btn-primary layui-btn-sm">
+                            <i class="layui-icon">&#xe702;</i>
+                            查看
+                        </a>
+                        <a href="/ClassAndUser/DeleteUser?id=@item.Id"
+                           class="layui-btn layui-btn-primary layui-btn-sm">
+                            <i class="layui-icon">&#xe640;</i>
+                            删除
+                        </a>
+                    </div>
+                </td>
+            }
+
+        </tr>
+    }
+
+</table>

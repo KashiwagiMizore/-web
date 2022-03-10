@@ -1,0 +1,52 @@
+﻿@model IEnumerable<HomeworkSubmit.DTO.ClassNumberDTO>
+
+@{
+    ViewBag.Title = "ClassList";
+}
+
+<h2>班级列表</h2>
+<a href="/ClassAndUser/AddClass"
+   class="layui-btn layui-btn-radius layui-btn-normal">
+    <i class="layui-icon">&#xe608;</i>
+    创建班级
+</a>
+
+<table class="table">
+    <tr>
+        <th>
+            班级
+        </th>
+    </tr>
+
+    @foreach (var item in Model)
+    {
+        <tr>
+            <td>
+                @item.ClassNum 班
+            </td>
+            <td>
+                @*@Html.ActionLink("编辑", "EditClass", new { id = item.ClassNumId })|
+                    @Html.ActionLink("查看", "UserList", new { id = item.ClassNumId })|
+                    @Html.ActionLink("删除", "DeleteClass", new { id = item.ClassNumId *@
+                <div class="layui-btn-group">
+                    <a href="/ClassAndUser/EditClass?id=@item.ClassNumId"
+                       class="layui-btn layui-btn-primary layui-btn-sm">
+                        <i class="layui-icon">&#xe642;</i>
+                        编辑
+                    </a>
+                    <a href="/ClassAndUser/UserList?id=@item.ClassNumId"
+                       class="layui-btn layui-btn-primary layui-btn-sm">
+                        <i class="layui-icon">&#xe702;</i>
+                        查看
+                    </a>
+                    <a href="/ClassAndUser/DeleteClass?id=@item.ClassNumId"
+                       class="layui-btn layui-btn-primary layui-btn-sm">
+                        <i class="layui-icon">&#xe640;</i>
+                        删除
+                    </a>
+                </div>
+            </td>
+        </tr>
+    }
+
+</table>
