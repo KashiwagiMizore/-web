@@ -1,0 +1,6 @@
+D:\VS\Project\HomeworkSubmit\HomeworkSubmit.DTO\bin\Debug\HomeworkSubmit.DTO.dll
+D:\VS\Project\HomeworkSubmit\HomeworkSubmit.DTO\bin\Debug\HomeworkSubmit.DTO.pdb
+D:\VS\Project\HomeworkSubmit\HomeworkSubmit.DTO\obj\Debug\HomeworkSubmit.DTO.csprojAssemblyReference.cache
+D:\VS\Project\HomeworkSubmit\HomeworkSubmit.DTO\obj\Debug\HomeworkSubmit.DTO.csproj.CoreCompileInputs.cache
+D:\VS\Project\HomeworkSubmit\HomeworkSubmit.DTO\obj\Debug\HomeworkSubmit.DTO.dll
+D:\VS\Project\HomeworkSubmit\HomeworkSubmit.DTO\obj\Debug\HomeworkSubmit.DTO.pdb
